@@ -22,7 +22,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col">
                 <h1>{{ counter }}</h1>
@@ -31,6 +30,11 @@
                 &nbsp;
                 <button v-on:click="decrementCounter" class="btn btn-outline-secondary">Decrement</button>
 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <my-component></my-component>
             </div>
         </div>
 
@@ -46,6 +50,13 @@
 
         }
 
+        const MyComponent = {
+            proprs: [],
+            template: `
+                <h1>My Component<h1>
+            `,
+        }        
+
         const vm = Vue.createApp({
             data() {
                 return data;
@@ -58,6 +69,9 @@
                     this.counter --;
                 }
                 
+            },
+            components: {
+                MyComponent,
             }
         }).mount("#app")
 
