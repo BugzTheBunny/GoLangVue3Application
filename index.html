@@ -50,10 +50,31 @@
 
         }
 
-        const MyComponent = {
-            proprs: [],
+        const TextInput = {
+            proprs: {
+                name: String,
+                type: String,
+                label: String,
+                placeholder: String,
+                required: String,
+                min: String,
+                max: String,
+                value: String,
+            },
             template: `
-                <h1>My Component<h1>
+                <div class="mb-3">
+                    <label :for="name" class="form-label"> {{ label }} </label>
+                    <input
+                        :type="type"
+                        :name="name"
+                        :placeholder="placeholder"
+                        :required="required"
+                        :min="min"
+                        :max="max"
+                        :value="value"
+                        class="form-control"
+                    >
+                </div>
             `,
         }        
 
