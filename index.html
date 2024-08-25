@@ -34,7 +34,11 @@
         </div>
         <div class="row">
             <div class="col">
-                <my-component></my-component>
+                <form class="needs-validation mt-5" novalidate>
+                    <text-input label="First Name" type="text" name="first-name"></text-input>
+                    <text-input label="Last Name" type="text" name="last-name"></text-input>
+                    <text-input label="Email" type="email" name="email"></text-input>
+                </form>
             </div>
         </div>
 
@@ -92,7 +96,7 @@
                 
             },
             components: {
-                MyComponent,
+                TextInput,
             }
         }).mount("#app")
 
