@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"vue-api/internal/data"
+	"vue-api/internal/driver"
 )
 
 type Config struct {
@@ -15,6 +17,7 @@ type Application struct {
 	Config   Config
 	InfoLog  *log.Logger
 	ErrorLog *log.Logger
+	models   data.Models
 }
 
 func main() {
@@ -24,10 +27,20 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stdout, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
 
+	dsn := os.Getenv("DSN")
+
+	database, err := driver.ConnectPostgres(dsn)
+	if err != nil {
+		log.Fatal("Cannot connect to database")
+	}
+
+	defer database.SQL.Close()
+
 	app := &Application{
 		Config:   cfg,
 		InfoLog:  infoLog,
 		ErrorLog: errorLog,
+		models:   data.New(database.SQL),
 	}
 
 	app.serve()
