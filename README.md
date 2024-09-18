@@ -10,9 +10,24 @@ Following [this](https://www.udemy.com/course/working-with-vue-3-and-go/) course
 #### Setup:
 - inside vue-api : `go mod tidy`
 - inside vue-application : `npm install`
-- inside vue-api (for database): `docker-compose up -d`
+- inside vue-api (for postgres database): `docker-compose up -d`
 
+#### Postgres
+- [Beekeeper Client](https://www.beekeeperstudio.io/download/?ext=exe&arch=&type=installer&edition=ultimate)
+- Tables:
+    - users:  
+        `Email also must be unique`  
+        ![alt text](/VueGo/vue-api/users_table.png)
+    
+    - tokens:  
+        ![alt text](/VueGo/vue-api/tokens_table.png)
+    
+    - PK:
+        ![alt text](/VueGo/vue-api/users_tokens_pk.png)
 #### Runnig:
 - API
     - start - `make start`
     - stop - `make stop`
+
+- Vue App
+    - start - `npm run serve`

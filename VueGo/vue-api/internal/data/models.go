@@ -108,7 +108,7 @@ func (u *User) GetByID(id int) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, first_name, last_name, password, created_at, updated_at where id = $1`
+	query := `select id, email, first_name, last_name, password, created_at, updated_at from users where id = $1`
 	var user User
 
 	row := db.QueryRowContext(ctx, query, id)
@@ -283,7 +283,7 @@ func (t *Token) GetUserForToken(token Token) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, first_name, last_name, password, created_at, updated_at where id = $1`
+	query := `select id, email, first_name, last_name, password, created_at, updated_at from users where id = $1`
 	var user User
 
 	row := db.QueryRowContext(ctx, query, token.UserID)
@@ -342,7 +342,7 @@ func (t *Token) AuthenticateToken(r *http.Request) (*User, error) {
 	tkn, err := t.GetByToken(token)
 
 	if err != nil {
-		return nil, errors.New("No matching token found")
+		return nil, errors.New("o matching token found")
 	}
 
 	if tkn.Expiry.Before(time.Now()) {
@@ -401,7 +401,7 @@ func (t *Token) DeleteByToken(plainText string) error {
 	return nil
 }
 
-func (t *Token) validToken(plainText string) (bool, error) {
+func (t *Token) ValidToken(plainText string) (bool, error) {
 	token, err := t.GetByToken(plainText)
 	if err != nil {
 		return false, errors.New("no matching token found")
@@ -409,13 +409,12 @@ func (t *Token) validToken(plainText string) (bool, error) {
 
 	_, err = t.GetUserForToken(*token)
 	if err != nil {
-		return false, errors.New("no matching user found for token")
+		return false, errors.New("no matching user found")
 	}
 
 	if token.Expiry.Before(time.Now()) {
 		return false, errors.New("expired token")
 	}
-
+	println("All good")
 	return true, nil
-
 }

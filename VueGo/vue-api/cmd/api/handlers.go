@@ -5,9 +5,12 @@ import (
 )
 
 type JsonResponse struct {
-	Error   bool   `json:"error"`
-	Message string `json:"message"`
+	Error   bool        `json:"error"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data",omitempty`
 }
+
+type envelope map[string]interface{}
 
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	type Credentials struct {
