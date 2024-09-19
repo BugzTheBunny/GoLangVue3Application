@@ -14,10 +14,11 @@ type Config struct {
 }
 
 type Application struct {
-	Config   Config
-	InfoLog  *log.Logger
-	ErrorLog *log.Logger
-	models   data.Models
+	Config      Config
+	InfoLog     *log.Logger
+	ErrorLog    *log.Logger
+	models      data.Models
+	environment string
 }
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 	errorLog := log.New(os.Stdout, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	dsn := os.Getenv("DSN")
-
+	environment := os.Getenv("ENV")
 	database, err := driver.ConnectPostgres(dsn)
 	if err != nil {
 		log.Fatal("Cannot connect to database")
@@ -37,10 +38,11 @@ func main() {
 	defer database.SQL.Close()
 
 	app := &Application{
-		Config:   cfg,
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
-		models:   data.New(database.SQL),
+		Config:      cfg,
+		InfoLog:     infoLog,
+		ErrorLog:    errorLog,
+		models:      data.New(database.SQL),
+		environment: environment,
 	}
 
 	app.serve()

@@ -83,7 +83,7 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, first_name, last_name, password, created_at, updated_at where email = $1`
+	query := `select id, email, first_name, last_name, password, created_at, updated_at from users where email = $1`
 	var user User
 
 	row := db.QueryRowContext(ctx, query, email)
@@ -342,7 +342,7 @@ func (t *Token) AuthenticateToken(r *http.Request) (*User, error) {
 	tkn, err := t.GetByToken(token)
 
 	if err != nil {
-		return nil, errors.New("o matching token found")
+		return nil, errors.New("no matching token found")
 	}
 
 	if tkn.Expiry.Before(time.Now()) {
@@ -415,6 +415,5 @@ func (t *Token) ValidToken(plainText string) (bool, error) {
 	if token.Expiry.Before(time.Now()) {
 		return false, errors.New("expired token")
 	}
-	println("All good")
 	return true, nil
 }

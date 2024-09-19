@@ -20,17 +20,30 @@ func (app *Application) readJson(w http.ResponseWriter, r *http.Request, data in
 
 	err = dec.Decode(&struct{}{}) // Checking if there is more than one json value
 	if err != io.EOF {
-		return errors.New("Body must have only a single json value")
+		return errors.New("body must have only a single json value")
 	}
 
 	return nil
 }
 
 func (app *Application) writeJson(w http.ResponseWriter, status int, data interface{}, headers ...http.Header) error {
-	out, err := json.MarshalIndent(data, "", "\t")
 
-	if err != nil {
-		return err
+	var output []byte
+
+	if app.environment == "development" {
+		out, err := json.MarshalIndent(data, "", "\t")
+
+		if err != nil {
+			return err
+		}
+		output = out
+	} else {
+		out, err := json.Marshal(data)
+
+		if err != nil {
+			return err
+		}
+		output = out
 	}
 
 	if len(headers) > 0 {
@@ -68,7 +81,7 @@ func (app *Application) errorJSON(w http.ResponseWriter, err error, status ...in
 		customErr = errors.New("the value you are trying to insert is too large")
 		statusCode = http.StatusForbidden
 	case strings.Contains(err.Error(), "SQLSTATE 23503"):
-		customErr = errors.New("freign key violation")
+		customErr = errors.New("foreign key violation")
 		statusCode = http.StatusForbidden
 	default:
 		customErr = err
